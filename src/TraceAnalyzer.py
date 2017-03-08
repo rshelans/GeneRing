@@ -7,6 +7,7 @@ import scipy
 import argparse
 import glob
 import os.path
+
 __version__="01.00.00"
 __author__ ="Robert Shelansky"
 
