@@ -9,25 +9,6 @@ __author__ ="Robert Shelansky"
 BUBBLE = int(True)
 LINKER = int(False)
 
-ZRS =(0,78)
-UAS1=(281,303)
-UAS2=(389,411)
-TATA=(551,557)
-TSS = 607
-ORF =(652,2055)
-NUCLEOSOME_SIZE=147
-NUCLEOSOME_CUTOFF=90
-
-#Robert's Regions
-N1REGION=[UAS2[1]+24,TSS+NUCLEOSOME_SIZE//2+5]
-N3REGION=[ZRS[0],UAS2[0]-35]
-N2REGION=[UAS2[0]-83,UAS2[1]+NUCLEOSOME_CUTOFF+10]
-#Saketh's Regions
-sN1REGION=[490,580]
-sN2REGION=[UAS2[0]-83,UAS2[1]+NUCLEOSOME_CUTOFF+10]
-sN3REGION=[ZRS[0],UAS2[0]-35]
-
-
 class Region:
 		"""
 		Class Molecule represents individual bubbles or linkers
@@ -179,19 +160,3 @@ class Molecule:
 
 
 
-def get_configuration(molecule):
-	"""
-	get_configuration takes a molecule object and returns its estimation of the 
-	configuration of the molecuels promoter as defined by 
-	
-	'Nucleosomal promoter variation generates gene expression noise'
-	Christopher R. Brown and Hinrich Boeger1
-
-	The return type is the configuration Number.
-	"""
-
-	#Definitions for molecule Regions
-	n1   =    [bub for bub in molecule.getOverlap(N1REGION[0],N1REGION[1],NUCLEOSOME_CUTOFF) if bub.isbubble]
-	n2   =    [bub for bub in molecule.getExc(UAS2[0],UAS2[1])  if (bub.isbubble and bub.size >NUCLEOSOME_CUTOFF) ]
-	n3   =    [bub for bub in molecule.getOverlap(N3REGION[0],N3REGION[1],NUCLEOSOME_CUTOFF) if bub.isbubble]
-	return(Configuration(n1,n2,n3))
