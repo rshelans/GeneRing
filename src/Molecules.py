@@ -19,11 +19,13 @@ class DataBase:
 
 
 def _sample_(array, bootstraps):
+	##ONLEY WORKS ON SCIPY ARRAYS
 	samples = (scipy.random.randint(0,len(array),size=len(array)) for i in range(bootstraps))
 	for sample in samples:
 		yield array[sample]
 
 def bootstrap(array, function, bootstraps, alpha=0.95):
+	##ONLEY WORKS ON SCIPY ARRAYS
 	strapped=scipy.array(list(map(function,_sample_(array,bootstraps))))
 	sortstrapped =scipy.sort(strapped,axis=0)
 	mew  = scipy.mean(sortstrapped, axis=0)
@@ -31,11 +33,11 @@ def bootstrap(array, function, bootstraps, alpha=0.95):
 						sortstrapped[ bootstraps-int((1-alpha)/2*bootstraps) ,:]])
 	return(mew,error,strapped)
 
-def _rvalue_(molecules):
-	scipy.sum(molecules, axis=0)/len(molecules)
+def _rvalue_(_array_):
+	return(scipy.sum(_array_, axis=0)/len(_array_))
 
 def rvalue(mols):
-	return(_ravlue_([mol._array_ for mol in mols]))
+	return(_rvalue_([mol._array_ for mol in mols]))
 
 def _midpoint_(bubbles, length):
 	return(scipy.bincount([bub.start+bub.size//2 for bub in bubbles],minlength=length))
