@@ -3,7 +3,8 @@ import scipy
 
 __version__="01.00.00"
 __author__ ="Robert Shelansky"
-ZRS   =(0,78)
+
+ZRS   =(0  , 78)
 UAS1  =(281,303)
 UAS2  =(389,411)
 TATA  =(551,557)
@@ -117,14 +118,14 @@ def build_gene_plot(plt):
 	ax2.get_xgridlines()[2].set_linestyle('-')
 
 	patches = [
-				matplotlib.patches.Rectangle((0   -607 ,    0), 30  , 4, facecolor='black'  ), #lexa
-				matplotlib.patches.Rectangle((48  -607 ,    0), 30  , 1, facecolor='dimgrey'), #zrux
-				matplotlib.patches.Rectangle((281 -607 ,    0), 21  , 1, facecolor='red'    ), #uas1
-				matplotlib.patches.Rectangle((391 -607 ,    0), 21  , 1, facecolor='red'    ), #uass2
-				matplotlib.patches.Rectangle((551 -607 ,    0), 6   , 1, facecolor='green'  ), #TATA
-				matplotlib.patches.Rectangle((607 -607 ,    0), 1484, 1, facecolor='cyan'   ), #tss 
-				matplotlib.patches.Rectangle((652 -607 ,    0), 1404, 1, facecolor='blue'   ), #orf
-				matplotlib.patches.Rectangle((2140-607 ,    0), 106 , 1, facecolor='black'  ), #lexa
+				matplotlib.patches.Rectangle((0   -TSS ,    0), 30  , 1, facecolor='black'  ), #lexa
+				matplotlib.patches.Rectangle((48  -TSS ,    0), 30  , 1, facecolor='dimgrey'), #zrux
+				matplotlib.patches.Rectangle((281 -TSS ,    0), 21  , 1, facecolor='red'    ), #uas1
+				matplotlib.patches.Rectangle((391 -TSS ,    0), 21  , 1, facecolor='red'    ), #uass2
+				matplotlib.patches.Rectangle((551 -TSS ,    0), 6   , 1, facecolor='green'  ), #TATA
+				matplotlib.patches.Rectangle((607 -TSS ,    0), 1484, 1, facecolor='cyan'   ), #tss 
+				matplotlib.patches.Rectangle((652 -TSS ,    0), 1404, 1, facecolor='blue'   ), #orf
+				matplotlib.patches.Rectangle((2140-TSS ,    0), 106 , 1, facecolor='black'  ), #lexa
 	]
 	[ax1.add_patch(p)  for p in patches]
 	#ax1.grid(False)
@@ -164,16 +165,16 @@ def build_nuc_config_plot(plt):
 	ax1.tick_params(axis='x',which='both',bottom='off',top='off',labelbottom='off')
 	ax2.tick_params(axis='y', which='both',left='off',right='off',labelright='on', labelleft='off')
 	ax2.tick_params(axis='x',which='both',top='off',bottom='off')
-	b_circles=[[matplotlib.patches.Circle((i,n+1),0.20,color='black') for n,c in enumerate(config) if c] for i,config in enumerate([(0,0,1),(0,1,0),(1,0,0)])]
+	b_circles=[[matplotlib.patches.Circle((i,n+1),0.20,color='black') for n,c in enumerate(config) if c] for i,config in enumerate([(1,0,0),(0,1,0),(0,0,1)])]
 	b_circles=[c for l in b_circles for c in l]
-	g_circles=[[matplotlib.patches.Circle((i,n+1),0.20,color='grey') for n,c in enumerate(config) if not c] for i,config in enumerate([(0,0,1),(0,1,0),(1,0,0)])]
+	g_circles=[[matplotlib.patches.Circle((i,n+1),0.20,color='grey') for n,c in enumerate(config) if not c] for i,config in enumerate([(1,0,0),(0,1,0),(0,0,1)])]
 	g_circles=[c for l in g_circles for c in l]
 	boxes  =[matplotlib.patches.Rectangle((i -0.75/2 ,0), 0.75, 4, lw=4,edgecolor='black',fill=False) for i in range(3)]
 	[ax2.add_artist(artist) for artist in boxes]
 	[ax2.add_artist(artist) for artist in b_circles]
 	[ax2.add_artist(artist) for artist in g_circles]
-	ax2.set_yticklabels(["5'",'','N -3','','N -2','','N -1','',"3'"])
-	ax2.set_xticklabels(['','N -3','','N -2','','N -1',''])
+	ax2.set_yticklabels(["5'",'','N -3','','N -2','','N -1','',"3'"],weight='bold')
+	ax2.set_xticklabels(['','N -3','','N -2','','N -1',''],weight='bold')
 	ax2.set_ylim([0,4])
 	ax2.set_xlim([-0.5,2.5])
 	return(fig,ax1)

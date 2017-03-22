@@ -54,14 +54,21 @@ parser.add_argument('-i','--imgres',
 					default = scipy.NAN,
 					type    = scipy.float16,
 					help    ='The image resolution of the raw image used to make the trace.')
+parser.add_argument('-d','--directory',
+					action='store_false',
+					default='true')
 
 
 args      = parser.parse_args()
 args.files=[f for g in args.files for f in glob.glob(g)]
+if len(args.files) == 0:
+	sys.stderr.write('No Trace Files Found. Check the file path.')
+	sys.exit()
+
+
 params    = vars(args)
 params['version']=__version__
 params['title']=os.path.basename(sys.argv[0]).split('.')[0]
-
 
 
 model = TraceModel.TraceModel(**params)

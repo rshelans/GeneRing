@@ -9,7 +9,7 @@ class TraceModel:
 	A model/controller of data which knows how to do specific analysis and maintenance of settings etc.
 	Can be used as a data dump for communication with the TraceView.
 	"""
-	def __init__(self,imgres=scipy.NAN,user=None,out_path=None,title=None,version=None,files=None,length=None,threshold=None,smooth=None,**kw):
+	def __init__(self,imgres=scipy.NAN,directory=None,user=None,out_path=None,title=None,version=None,files=None,length=None,threshold=None,smooth=None,**kw):
 		self.settings = {
 			'length':length,
 			'threshold':threshold,
@@ -34,7 +34,8 @@ class TraceModel:
 			'saved':['' for i in range(len(files))],
 			'out_path':out_path,
 			'imgres':imgres,
-			'pimgres':None}
+			'pimgres':None,
+			'directory':directory}
 		self.molecule = {
 			'smoothed':None,
 			'fr':None,
@@ -143,8 +144,13 @@ class TraceModel:
 			path=self.context['out_path']
 		else:
 			path= os.path.dirname(self.context['path'])
-		mol_file=path+'\\'+base+'.mol'
-		reg_file=path+'\\'+base+'.reg'
+			if self.context['directory']:
+				path=path+'\\'+base
+				if not os.path.exists(path):
+					os.makedirs(path)
+
+		mol_file='{}\\{}.mol'.format(path,base)
+		reg_file='{}\\{}.reg'.format(path,base)
 		with open(mol_file, 'w') as file:
 			self.write_comments(file)
 			self.molecule['molecule'].write(file)

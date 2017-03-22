@@ -26,17 +26,19 @@ def _sample_(array, bootstraps):
 
 def bootstrap(array, function, bootstraps, alpha=0.95):
 	##ONLEY WORKS ON SCIPY ARRAYS
-	strapped=scipy.array(list(map(function,_sample_(array,bootstraps))))
-	sortstrapped =scipy.sort(strapped,axis=0)
-	mew  = scipy.mean(sortstrapped, axis=0)
-	error= scipy.array([sortstrapped[int((1-alpha)/2*bootstraps) ,:],
+	strapped     = scipy.array(list(map(function,_sample_(array,bootstraps))))
+	sortstrapped = scipy.sort(strapped,axis=0)
+	mew          = scipy.mean(sortstrapped, axis=0)
+	error        = scipy.array([sortstrapped[int((1-alpha)/2*bootstraps) ,:],
 						sortstrapped[ bootstraps-int((1-alpha)/2*bootstraps) ,:]])
 	return(mew,error,strapped)
 
 def _rvalue_(_array_):
 	return(scipy.sum(_array_, axis=0)/len(_array_))
 
-def rvalue(mols):
+def rvalue(mols, length=None, depth=1.0):
+	assert(len(mols)>0)
+	assert(isinstance(mols[0], Chromatin.Molecule))
 	return(_rvalue_([mol._array_ for mol in mols]))
 
 def _midpoint_(bubbles, length):
@@ -63,8 +65,11 @@ def _bubble_size_(molecule):
 def bubble_size(molecules):
 	return((_bubble_size_(mol) for mol in molecules))
 
-def test(molecules):
-	return([scipy.mean([mol[i].size for mol in molecules if mol[i].isbubble]) for i  in range(len(molecules[0]))])
+def _linker_size_(molecule):
+	return( (molecule[i].size if not molecule[i].isbubble else scipy.nan for i in range(len(molecule))))
+
+def linker_size(molecules):
+	return((_linker_size_(mol) for mol in molecules))
 
 def smooth(array, binwidth):
 	"""
@@ -74,15 +79,18 @@ def smooth(array, binwidth):
 	array         =scipy.convolve(array,scipy.ones(binwidth)/binwidth, mode='same')
 	return(array)
 
-# def rval_bubbles(bubs,factor=1):
-# 	rval = scipy.zeros(len(self._mols[0]))
-# 	for bub in bubs:
-# 		rval[bub.start:bub.end]
-
-
 def get_bubbles(molecules, start, end):
 	return((bub for mol in molecules for bub in mol[start:end] if bub.isbubble))
+
+def get_linkers(molecules, start, end):
+	return((link for mol in molecules for link in mol[start:end] if not link.isbubble))
 
 
 def get_region_rval(molecules, start, end):
 	return(scipy.sum(scipy.array([mol._array_[start:end] for mol in molecules]), axis=1)/(end-start))
+
+def bubbles_to_molecule(bubbles, length, depth=1.0):
+	counts = scipy.zeros(length)
+	for bub in bubbles:
+		counts[bub.start:bub.end]+=1
+	return(counts/depth)
