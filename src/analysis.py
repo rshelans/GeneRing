@@ -11,20 +11,26 @@ import matplotlib.pyplot as plt
 
 
 
-PATH_TO_DATABASE = 'C:\\Users\\Robert\\Desktop\\NewT&ADatabase\\'
+PATH_TO_DATABASE = 'E:\\database\\'
 data             = Molecules.DataBase(PATH_TO_DATABASE)
 
 s1    = data._mols[data._strain=='yM19']
 s2    = data._mols[data._strain=='yM8']
-s3    = data._mols[data._strain=='doody']
+s3    = data._mols[data._strain=='yC169']
 s4    = data._mols[data._strain=='yM208']
 s5    = data._mols[data._strain=='yM2']
 s6    = data._mols[data._strain=='yM89']
+
+# print(data._name[data._check == False])
+
 
 alpha     =0.95
 iterations=1000
 x         =list(range(-Pho5.TSS,Pho5.LENGTH-Pho5.TSS))
 binwidth  =20
+
+
+
 
 
 
@@ -65,8 +71,8 @@ binwidth  =20
 # ax.plot        (x, mew,color='red',linewidth=2)
 
 # mew,error,_=Molecules.bootstrap(s6 , Molecules.rvalue, iterations)
-# ax.fill_between(x, error[0,:], error[1,:], alpha=0.30,color='darkorange',linewidth=0.0)
-# ax.plot        (x, mew,color='darkorange',linewidth=2)
+# ax.fill_between(x, error[0,:], error[1,:], alpha=0.20,color='orange',linewidth=0.0)
+# ax.plot        (x, mew,color='orange',linewidth=2)
 
 
 

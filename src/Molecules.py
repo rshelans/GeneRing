@@ -2,7 +2,7 @@ import Chromatin
 import os
 import scipy
 import glob
-
+import sys
 
 __version__="01.00.00"
 __author__ ="Robert Shelansky"
@@ -11,11 +11,31 @@ __author__ ="Robert Shelansky"
 class DataBase:
 	def __init__(self, DATA_BASE_PATH):
 		PATH_TO_DATABASE=DATA_BASE_PATH
-		MOLECULE_FILES  =glob.glob(PATH_TO_DATABASE+'\\*\\*\\*\\molecule_info.txt')
-		self._mols   = scipy.array([Chromatin.Molecule.info_parse(open(file)) for file in MOLECULE_FILES])
-		self._name   = scipy.array([file.split(sep='\\')[-2] for file in MOLECULE_FILES]).astype(str)
-		self._strain = scipy.array([file.split(sep='\\')[-4].split('_')[0] for file in MOLECULE_FILES]).astype(str) 
-		self._desc   = scipy.array([set(file.split(sep='\\')[5].split('_')[1:]) for file in MOLECULE_FILES]).astype(str)
+		MOLECULE_FILES  = []
+		MOLECULE_FILES  = glob.glob(PATH_TO_DATABASE+'\\*\\*\\*\\molecule_info.txt') + MOLECULE_FILES
+		MOLECULE_FILES  = glob.glob(PATH_TO_DATABASE+'\\*\\*\\*\\*.mol') + MOLECULE_FILES
+
+		self._mols      = scipy.array([self._read_(file) for file in MOLECULE_FILES])
+		self._name      = scipy.array([file.split(sep='\\')[-2] for file in MOLECULE_FILES]).astype(str)
+		self._strain    = scipy.array([file.split(sep='\\')[-4].split('_')[0] for file in MOLECULE_FILES]).astype(str) 
+		self._desc      = scipy.array([set(file.split(sep='\\')[5].split('_')[1:]) for file in MOLECULE_FILES]).astype(str)
+		self._check     = scipy.array([self._check_(mol) for mol in self._mols])
+
+
+	def _read_(self, file):
+		ext = os.path.splitext(file)[1]
+		if ext in ['.txt']:
+			return (Chromatin.Molecule.info_parse(open(file)))
+		elif ext in ['.mol']:
+			return (Chromatin.Molecule.read(file))
+		else:
+			return NotImplemented
+
+	def _check_(self, mol):
+		if (len(mol) != len(mol._array_)) or sum(mol._starts_[1:]) != sum(mol._ends_[:-1]):
+			sys.stderr.write("Invalid Molecule(s) Included In Analysis.")
+			return(False)
+		return(True)
 
 
 def _sample_(array, bootstraps):
