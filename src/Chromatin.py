@@ -3,6 +3,7 @@ import collections
 import bisect
 import sys
 
+
 __version__="01.00.00"
 __author__ ="Robert Shelansky"
 
@@ -15,7 +16,7 @@ class Region:
 		"""
 
 		def __init__(self, bubble, start, end, size):
-			self.isbubble= int(bubble)
+			self.isbubble= bool(bubble)
 			self.start = int(start)
 			self.end   = int(end)
 			self.size  = int(size)
@@ -45,7 +46,7 @@ class Molecule:
 		self.regions  = sorted(region_list,key=lambda x:x.start)
 		self._ends_   = [region.end for region in self.regions]
 		self._starts_ = [region.start for region in self.regions]
-		self._array_  = scipy.array(list("".join([str(reg.isbubble)*reg.size for reg in self]))).astype(int)
+		self._array_  = Molecule.array(self.regions,len(self)).astype(int)
 
 	def getBubbles(self):
 		return([region for region in self.regions if region.isbubble])
@@ -118,6 +119,37 @@ class Molecule:
 		for region in self:
 			print("{}\t{}\t{}".format(region.isbubble,region.start,region.end),file=file) 
 
+
+	@staticmethod
+	def array(regions, length):
+		"""
+		"""
+		array   = scipy.empty(length)
+		array[:]= scipy.NAN
+		for reg in regions:
+			array[reg.start:reg.end] = reg.isbubble
+		return (array)
+
+	@staticmethod
+	def filter(molecule, filter_func):
+		"""
+		Beta version:
+		Uses the filter_func which must return a boolean when being passed an individual region to filter
+		out certain regions. !!!DO NOT FILTER LINKERS AND BUBBLES AT THE SAME TIME.!!! All positions that were removed
+		are then interpolated by the surrounding values.
+		"""
+		filtered       = [Region(r.isbubble,r.start,r.end,len(r)) for r in molecule if not filter_func(r)]
+		filtered       = Molecule.array(filtered,len(molecule))
+		#Selects all removed bases and attempts to interpolate their value from surrounding bases.
+		#http://stackoverflow.com/questions/6518811/interpolate-nan-values-in-a-numpy-array
+		nans           = scipy.isnan(filtered)
+		f              = lambda x: x.nonzero()[0]
+		filtered[nans] = scipy.interp(f(nans),f(~nans),filtered[~nans])
+		#After interpolation the regions are reconstructed an a new molecule is created with specific regions removed.
+		pivots         = scipy.argwhere(scipy.diff(filtered))[:,0]+1
+		pivots         = scipy.concatenate(([0],pivots,[len(molecule)]))
+		new_regions    = [Region(bool(filtered[start]),start,stop,stop-start) for start,stop in zip(pivots[:-1],pivots[1:])]
+		return(Molecule(new_regions))
 
 	@classmethod
 	def read(cls,file):
