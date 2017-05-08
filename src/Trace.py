@@ -213,7 +213,7 @@ class Trace:
 		"""
 		calculates the number of basepairs per coordinate distance.
 		"""
-		return(length/self._cld[-1])
+		return(length / (self._ll / 2))
 
 	def moleculify(self,fr,fl,rr,rl,length):
 		"""

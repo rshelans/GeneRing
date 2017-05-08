@@ -66,9 +66,9 @@ if len(args.files) == 0:
 	sys.exit()
 
 
-params    = vars(args)
-params['version']=__version__
-params['title']=os.path.basename(sys.argv[0]).split('.')[0]
+params            = vars(args)
+params['version'] = __version__
+params['title']   = os.path.basename(sys.argv[0]).split('.')[0]
 
 
 model = TraceModel.TraceModel(**params)

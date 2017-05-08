@@ -303,8 +303,8 @@ Midpoint  : {} Coordinate
 
 		TRACE_INFO="""
 TRACE INFO
-Image Resolution: {:>10.2f} nm/AU       
-Pred. Image Res.: {:>10.2f} nm/AU
+Image Resolution: {:>10.2f} nm/px       
+Pred. Image Res.: {:>10.2f} nm/px
 Trace Scale     : {:>10.2f} bp/AU
 Trace Resolution: {:>10.2f} bp
 Trace Steadiness: {:>10.2f} bp

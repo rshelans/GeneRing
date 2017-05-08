@@ -107,8 +107,8 @@ class TraceModel:
 
 	def write_comments(self,file):
 		print("""
-##Image_Resolution\t{:.2f} nm/AU       
-##Predicted_Image_Resolution\t{:>.2f} nm/AU
+##Image_Resolution\t{:.2f} nm/px       
+##Predicted_Image_Resolution\t{:>.2f} nm/px
 ##Tracer\t{}
 ##Length\t{} bp
 ##Edgebuffer\t{} Coordinates
